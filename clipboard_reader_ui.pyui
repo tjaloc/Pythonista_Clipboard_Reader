@@ -1,0 +1,100 @@
+[
+  {
+    "nodes" : [
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{6, 8}, {36, 36}}",
+        "class" : "ImageView",
+        "attributes" : {
+          "flex" : "RB",
+          "frame" : "{{190, 110}, {100, 100}}",
+          "tint_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+          "class" : "ImageView",
+          "uuid" : "3505C125-39C0-4F2D-93FE-FB38AE9FC6BE",
+          "name" : "imageview1",
+          "image_name" : "iob:chatbox_working_24"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{50, 13}, {150, 32}}",
+        "class" : "Label",
+        "attributes" : {
+          "flex" : "RB",
+          "font_size" : 14,
+          "text_color" : "RGBA(0.099057,0.099057,0.099057,1.000000)",
+          "frame" : "{{165, 144}, {150, 32}}",
+          "tint_color" : "RGBA(0.030660,0.030660,0.030660,1.000000)",
+          "uuid" : "47DFA6ED-E94C-4EE0-9CA9-7FF3ED6FC020",
+          "class" : "Label",
+          "alignment" : "left",
+          "text" : "Voice",
+          "name" : "voice",
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{50, 53}, {396, 202}}",
+        "class" : "TextView",
+        "attributes" : {
+          "flex" : "HLR",
+          "font_size" : 17,
+          "editable" : true,
+          "frame" : "{{140, 60}, {200, 200}}",
+          "spellchecking_type" : "default",
+          "class" : "TextView",
+          "uuid" : "19950EEB-0848-4B7C-A12D-578F363770D3",
+          "alignment" : "left",
+          "autocorrection_type" : "default",
+          "name" : "text_block",
+          "font_name" : "<System>"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{50, 263}, {396, 40}}",
+        "class" : "Button",
+        "attributes" : {
+          "uuid" : "F9EE8DFA-19C4-48A8-A4B5-48B3541D1249",
+          "flex" : "LRT",
+          "corner_radius" : 20,
+          "background_color" : "RGBA(1.000000,0.033333,0.355556,1.000000)",
+          "frame" : "{{200, 144}, {80, 32}}",
+          "tint_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+          "border_width" : 0,
+          "title" : "Stop",
+          "action" : "self.stop_speaking",
+          "font_bold" : true,
+          "class" : "Button",
+          "name" : "btn_stop",
+          "font_size" : 15
+        },
+        "selected" : false
+      }
+    ],
+    "frame" : "{{0, 0}, {480, 320}}",
+    "class" : "View",
+    "attributes" : {
+      "flex" : "",
+      "enabled" : true,
+      "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
+      "custom_class" : "",
+      "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+      "background_color" : "RGBA(0.889151,0.879271,0.859513,1.000000)",
+      "name" : ""
+    },
+    "selected" : false
+  }
+]
