@@ -4,7 +4,15 @@ Clipboard Reader is a Pythonista program to read out not whole pages but just th
 
 ## How to Use
 
-Copy the text you want to be read to you, run main.py and the text's language will be detected, a voice will be chosn accordingly. The text will be read in blocks (paragraphs) and also displayed in a simple ui. Use the stop button to abort.
+Copy the text you want to be read to you, run main.py and the text's language will be detected, a voice will be chosn accordingly. The text will be read in blocks (usually sentences) and also displayed in a simple ui. 
+
+### stop-button
+
+Use the stop button to abort. 
+
+### read clipboard button
+
+Re-read the clipboard content or read newly copied text. This allows to keep the app running to read with the same settings e.g. speech rate.
 
 ### Voice Preferences
 
