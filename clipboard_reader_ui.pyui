@@ -5,6 +5,40 @@
         "nodes" : [
 
         ],
+        "frame" : "{{0, 0}, {480, 59}}",
+        "class" : "View",
+        "attributes" : {
+          "flex" : "WB",
+          "frame" : "{{190, 110}, {100, 100}}",
+          "background_color" : "RGBA(0.825472,0.797956,0.742925,1.000000)",
+          "class" : "View",
+          "name" : "header",
+          "uuid" : "4B1EE8F3-1319-4F96-9CBC-BDC9094BEB4A"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{387, 22}, {86, 22}}",
+        "class" : "View",
+        "attributes" : {
+          "border_width" : 0,
+          "flex" : "LB",
+          "frame" : "{{190, 110}, {100, 100}}",
+          "class" : "View",
+          "corner_radius" : 18,
+          "background_color" : "RGBA(0.952941,0.941176,0.917647,1.000000)",
+          "uuid" : "6F59AE00-CB3B-4973-BF26-445303E7696E",
+          "name" : "speed_view"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
         "frame" : "{{6, 8}, {36, 36}}",
         "class" : "ImageView",
         "attributes" : {
@@ -13,7 +47,7 @@
           "tint_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
           "class" : "ImageView",
           "uuid" : "3505C125-39C0-4F2D-93FE-FB38AE9FC6BE",
-          "name" : "imageview1",
+          "name" : "speechbubble",
           "image_name" : "iob:chatbox_working_24"
         },
         "selected" : false
@@ -43,11 +77,11 @@
         "nodes" : [
 
         ],
-        "frame" : "{{50, 53}, {396, 202}}",
+        "frame" : "{{34, 67}, {412, 188}}",
         "class" : "TextView",
         "attributes" : {
-          "flex" : "HLR",
-          "font_size" : 17,
+          "flex" : "WH",
+          "name" : "text_block",
           "editable" : true,
           "frame" : "{{140, 60}, {200, 200}}",
           "spellchecking_type" : "default",
@@ -55,7 +89,7 @@
           "uuid" : "19950EEB-0848-4B7C-A12D-578F363770D3",
           "alignment" : "left",
           "autocorrection_type" : "default",
-          "name" : "text_block",
+          "font_size" : 17,
           "font_name" : "<System>"
         },
         "selected" : false
@@ -64,11 +98,11 @@
         "nodes" : [
 
         ],
-        "frame" : "{{50, 263}, {396, 40}}",
+        "frame" : "{{246, 263}, {200, 40}}",
         "class" : "Button",
         "attributes" : {
           "uuid" : "F9EE8DFA-19C4-48A8-A4B5-48B3541D1249",
-          "flex" : "LRT",
+          "flex" : "WLT",
           "corner_radius" : 20,
           "background_color" : "RGBA(1.000000,0.033333,0.355556,1.000000)",
           "frame" : "{{200, 144}, {80, 32}}",
@@ -82,6 +116,94 @@
           "font_size" : 15
         },
         "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{34, 263}, {200, 40}}",
+        "class" : "Button",
+        "attributes" : {
+          "uuid" : "F9EE8DFA-19C4-48A8-A4B5-48B3541D1249",
+          "font_size" : 15,
+          "corner_radius" : 20,
+          "background_color" : "RGBA(0.033333,0.677778,1.000000,1.000000)",
+          "frame" : "{{200, 144}, {80, 32}}",
+          "tint_color" : "RGBA(1.000000,1.000000,1.000000,1.000000)",
+          "border_width" : 0,
+          "title" : "Read Clipboard",
+          "action" : "self. read_clipboard",
+          "font_bold" : true,
+          "class" : "Button",
+          "name" : "btn_read",
+          "flex" : "WRT"
+        },
+        "selected" : true
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{387, 8}, {36, 36}}",
+        "class" : "Button",
+        "attributes" : {
+          "uuid" : "F9EE8DFA-19C4-48A8-A4B5-48B3541D1249",
+          "image_name" : "iob:minus_circled_32",
+          "flex" : "LB",
+          "corner_radius" : 18,
+          "background_color" : "RGBA(0.952941,0.941176,0.917647,1.000000)",
+          "frame" : "{{200, 144}, {80, 32}}",
+          "tint_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+          "border_width" : 0,
+          "title" : "",
+          "action" : "self. slower",
+          "font_bold" : true,
+          "class" : "Button",
+          "name" : "btn_slow",
+          "font_size" : 15
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{437, 8}, {36, 36}}",
+        "class" : "Button",
+        "attributes" : {
+          "uuid" : "F9EE8DFA-19C4-48A8-A4B5-48B3541D1249",
+          "name" : "btn_fast",
+          "font_size" : 15,
+          "corner_radius" : 18,
+          "background_color" : "RGBA(0.952941,0.941176,0.917647,1.000000)",
+          "frame" : "{{200, 144}, {80, 32}}",
+          "tint_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
+          "border_width" : 0,
+          "title" : "",
+          "action" : "self.faster",
+          "font_bold" : true,
+          "class" : "Button",
+          "image_name" : "iob:ios7_plus_32",
+          "flex" : "LB"
+        },
+        "selected" : false
+      },
+      {
+        "nodes" : [
+
+        ],
+        "frame" : "{{420, 22}, {20, 20}}",
+        "class" : "ImageView",
+        "attributes" : {
+          "flex" : "LB",
+          "alpha" : 1,
+          "frame" : "{{190, 110}, {100, 100}}",
+          "class" : "ImageView",
+          "uuid" : "5A172828-8C84-42F0-B102-7F9DEC05FFF9",
+          "name" : "speedometer",
+          "image_name" : "iob:ios7_speedometer_24"
+        },
+        "selected" : false
       }
     ],
     "frame" : "{{0, 0}, {480, 320}}",
@@ -92,7 +214,7 @@
       "tint_color" : "RGBA(0.000000,0.478000,1.000000,1.000000)",
       "custom_class" : "",
       "border_color" : "RGBA(0.000000,0.000000,0.000000,1.000000)",
-      "background_color" : "RGBA(0.889151,0.879271,0.859513,1.000000)",
+      "background_color" : "RGBA(0.890196,0.878431,0.858824,1.000000)",
       "name" : ""
     },
     "selected" : false
