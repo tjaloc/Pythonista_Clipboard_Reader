@@ -1,7 +1,6 @@
 import re
 import ui
 import clipboard
-import threading
 from clipboard_reader import ClipboardReader
 
 
@@ -33,7 +32,7 @@ class ClipboardReaderApp:
         """Recursively reads all blocks. 
         
             Why not a for-loop?
-            ui only updates onces after the function is finished. With recursion it updates with every block. With a for-loop view'd' update after the last block
+            ui only updates onces after the function is finished. With recursion it updates with every block. With a for-loop view'd update after the last block
         """
         if self.blocks == []:
             # case: nothing to read
