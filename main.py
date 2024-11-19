@@ -1,13 +1,14 @@
 import re
 import ui
 import clipboard
+import threading
 from clipboard_reader import ClipboardReader
 
 
 class ClipboardReaderApp:
     def __init__(self):
         self.cr = ClipboardReader()
-        self.view = ui.load_view('ui.pyui')
+        self.view = ui.load_view('clipboard_reader_ui.pyui')
         self.view.name = 'Clipboard Reader'
         self.view.present('sheet')
         self.blocks = []
@@ -25,14 +26,13 @@ class ClipboardReaderApp:
         
     def read_clipboard(self, sender=None):
         if self.get_text_from_clipboard():
-            #self.read_blocks()
             self.read_next_block()
         
     def read_next_block(self):
         """Recursively reads all blocks. 
         
             Why not a for-loop?
-            ui only updates onces after the function is finished. With recursion it updates with every block. With a for-loop view'd update after the last block
+            ui only updates once after the function is finished. With recursion it updates with every block. With a for-loop view'd update after the last block
         """
         if self.blocks == []:
             # case: nothing to read
@@ -69,12 +69,28 @@ class ClipboardReaderApp:
         elif not isinstance(content, str):
             msg = 'No text to read on clipboard. Copy some text.'
         else:
-            self.blocks = re.split(r'(?<=[.!?]) +', content)
+            blocks = re.split(r'(?:\n\s*\n|(?<=[.!?]) +|\n+)', content) # incl. whitespace/linebreaks
+            self.blocks = [self.clear_block(block) for block in blocks if block.strip()]
+            
             return True
             
         print(msg) 
         self.view['text_block'].text = msg 
         return False
+        
+    def clear_block(self, block):
+        """Clean up clipboard text by performing the following actions:
+            - Remove word splits caused by line breaks.
+            - Remove footnote numbers appearing at the end of sentences.
+              (Note: Line breaks in the clipboard are replaced by spaces.)
+        """
+        # fuse split words 
+        block = re.sub('-\s', '', block) 
+        
+        # remove footnote numbers 
+        block = re.sub(r'\.(\d+)(\s|$)', r'.\2', block) 
+        
+        return block
             
     def stop_speaking(self, sender):
         """Stop the speaking.
