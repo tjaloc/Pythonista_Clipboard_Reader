@@ -1,19 +1,20 @@
-from objc_util import ObjCClass, ns, create_objc_class#, ObjCInstance
+from objc_util import ObjCClass, ns, create_objc_class
 from preferences import RATE, VOICE_PREFERENCES
+
 
 class ClipboardReader:
     def __init__(self):
-        self.voices = None
+        self.voices = ObjCClass('AVSpeechSynthesisVoice').speechVoices()
         self.rate = RATE
         self.language = None
         self.name = None
         self.id = None
         self.current_text = ''
+        self.busy = False
         
         self.SYNTHESIZER = ObjCClass('AVSpeechSynthesizer').alloc().init()
         self.UTTERANCE = None
         
-        self.busy = False
         self.setup_delegate()
         
     def setup_delegate(self):
@@ -23,17 +24,27 @@ class ClipboardReader:
         
         The busy state includes preprocessing i.e. getting the dominant language and a voice.
         """
-        reader = self
+        
+        def on_speech_finished():
+            """Helper function to avoid Object's Key Value Coding Error. Delegate doesn't support direct access to python attributes and throws an error ("this class is not key value coding-compliant for the key 'busy'").
+            """
+            self.busy = False
+            
         def speechSynthesizer_didFinishSpeechUtterance_(_self, _cmd, synthesizer, utterance):
-            reader.busy = False
+            on_speech_finished()
         
         DelegateClass = create_objc_class(
             'SpeechSynthDelegate',
             methods=[speechSynthesizer_didFinishSpeechUtterance_],
             protocols=['AVSpeechSynthesizerDelegate']
         )
+        
         self.delegate = DelegateClass.alloc().init()
-        self.SYNTHESIZER.setDelegate_(self.delegate)
+        
+        try:
+            self.SYNTHESIZER.setDelegate_(self.delegate)
+        except Exception as e:
+            print(f"Error setting delegate: {e}")
         
     def who_is_speaking(self):
         """Return name and language of current voice.
@@ -47,18 +58,35 @@ class ClipboardReader:
         tagger = ObjCClass('NSLinguisticTagger').alloc().initWithTagSchemes_options_(['Language'], 0)
         tagger.setString_(string)
         detected_language = tagger.dominantLanguage()
-    
-        return str(detected_language)
+        lng =  str(detected_language)
         
-    def get_voices(self, lng: str) -> list:
+        return lng
+        
+    def reload_voices(self):
+        self.voices = list(ObjCClass('AVSpeechSynthesisVoice').speechVoices())
+        
+    def filter_voices(self, lng: str) -> list:
         """Get available voices in a given language.
         """
-        voices = ObjCClass('AVSpeechSynthesisVoice').speechVoices()
-        return [voice for voice in voices if str(voice.language()).startswith(lng)]
+        if not self.voices:
+            print(f"No voices found. Reload voices.")
+            self.reload_voices()
+        
+        try:
+            filtered_voices = [voice for voice in self.voices if str(voice.language()).startswith(lng)]
+        except TypeError as e:
+            print(e)
+            print(type(self.voices))
+            return
+        
+        return filtered_voices
         
     def speak_with_voice(self, text):
         """Replacement for speech.say() that also allows to choose a specific voice.
         """
+        # change state
+        self.busy = True 
+        
         # create new UTTERANCE
         self.UTTERANCE = ObjCClass('AVSpeechUtterance').alloc().initWithString_(ns(text))
         self.current_text = str(self.UTTERANCE.valueForKey_("speechString"))
@@ -71,7 +99,7 @@ class ClipboardReader:
         
         # speak
         self.SYNTHESIZER.speakUtterance_(self.UTTERANCE)
-    
+        
     def read_loud(self, content: str) -> None:
         """ Read given text. The dominant language will be determined to pick a suitable voice.
         If a suitable voice's name is in VOICE_PREFERENCES this voice will read the text. 
@@ -79,14 +107,14 @@ class ClipboardReader:
         self.busy = True
         
         lng = self.detect_language(content)
-        self.voices = self.get_voices(lng)
+        lng_voices = self.filter_voices(lng)
         
-        for voice in self.voices:
-            self.language = str(voice.language())
+        for voice in lng_voices:
             self.name = str(voice.name())
+            self.language = str(voice.language())
+            self.id = str(voice.identifier())  
             
             if self.name in VOICE_PREFERENCES:
-                self.id = str(voice.identifier())
                 break
                 
         self.speak_with_voice(content)
