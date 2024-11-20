@@ -1,10 +1,11 @@
+import re
 from objc_util import ObjCClass, ns, create_objc_class
 from preferences import RATE, VOICE_PREFERENCES
 
 
 class ClipboardReader:
     def __init__(self):
-        self.voices = ObjCClass('AVSpeechSynthesisVoice').speechVoices()
+        self.voices = list(ObjCClass('AVSpeechSynthesisVoice').speechVoices())
         self.rate = RATE
         self.language = None
         self.name = None
@@ -26,7 +27,7 @@ class ClipboardReader:
         """
         
         def on_speech_finished():
-            """Helper function to avoid Object's Key Value Coding Error. Delegate doesn't support direct access to python attributes and throws an error ("this class is not key value coding-compliant for the key 'busy'").
+            """Helper function to avoid ObjectC's Key Value Coding Error. Delegate doesn't support direct access to python attributes and throws an error ("this class is not key value coding-compliant for the key 'busy'").
             """
             self.busy = False
             
@@ -50,10 +51,21 @@ class ClipboardReader:
         """Return name and language of current voice.
         """
         return f'{self.name} ({self.language})'
+    
+    def block_has_no_letters(self, block:str):
+        return not bool(re.search(r'[a-zA-Z]', block))
         
     def detect_language(self, text: str) -> str:
         """Detect dominant language of a given Text.
         """
+        
+        # If text block includes no words objC cannot detect language. Use previously detected language or english as fallback.
+        if self.block_has_no_letters(text):
+            if self.language:
+                return self.language
+            else:
+                return 'en'
+                
         string = ObjCClass('NSString').stringWithString_(text)
         tagger = ObjCClass('NSLinguisticTagger').alloc().initWithTagSchemes_options_(['Language'], 0)
         tagger.setString_(string)
@@ -61,25 +73,6 @@ class ClipboardReader:
         lng =  str(detected_language)
         
         return lng
-        
-    def reload_voices(self):
-        self.voices = list(ObjCClass('AVSpeechSynthesisVoice').speechVoices())
-        
-    def filter_voices(self, lng: str) -> list:
-        """Get available voices in a given language.
-        """
-        if not self.voices:
-            print(f"No voices found. Reload voices.")
-            self.reload_voices()
-        
-        try:
-            filtered_voices = [voice for voice in self.voices if str(voice.language()).startswith(lng)]
-        except TypeError as e:
-            print(e)
-            print(type(self.voices))
-            return
-        
-        return filtered_voices
         
     def speak_with_voice(self, text):
         """Replacement for speech.say() that also allows to choose a specific voice.
@@ -105,15 +98,20 @@ class ClipboardReader:
         If a suitable voice's name is in VOICE_PREFERENCES this voice will read the text. 
         """
         self.busy = True
-        
         lng = self.detect_language(content)
-        lng_voices = self.filter_voices(lng)
         
-        for voice in lng_voices:
+        for voice in self.voices:
+            
+            # filter by language
+            language = str(voice.language()) 
+            if not language.startswith(lng):
+                continue
+                
             self.name = str(voice.name())
-            self.language = str(voice.language())
+            self.language = language
             self.id = str(voice.identifier())  
             
+            # stop at first voice preference
             if self.name in VOICE_PREFERENCES:
                 break
                 
