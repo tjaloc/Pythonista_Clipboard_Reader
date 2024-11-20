@@ -1,7 +1,7 @@
 import re
 import ui
 import clipboard
-import threading
+
 from clipboard_reader import ClipboardReader
 
 
@@ -71,7 +71,6 @@ class ClipboardReaderApp:
         else:
             blocks = re.split(r'(?:\n\s*\n|(?<=[.!?]) +|\n+)', content) # incl. whitespace/linebreaks
             self.blocks = [self.clear_block(block) for block in blocks if block.strip()]
-            
             return True
             
         print(msg) 
@@ -79,11 +78,11 @@ class ClipboardReaderApp:
         return False
         
     def clear_block(self, block):
-        """Clean up clipboard text by performing the following actions:
-            - Remove word splits caused by line breaks.
+        """Clean up clipboard strings:
+            - Remove word splits caused by line breaks
             - Remove footnote numbers appearing at the end of sentences.
               (Note: Line breaks in the clipboard are replaced by spaces.)
-        """
+        """ 
         # fuse split words 
         block = re.sub('-\s', '', block) 
         
@@ -91,7 +90,7 @@ class ClipboardReaderApp:
         block = re.sub(r'\.(\d+)(\s|$)', r'.\2', block) 
         
         return block
-            
+
     def stop_speaking(self, sender):
         """Stop the speaking.
         """
