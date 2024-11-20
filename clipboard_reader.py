@@ -22,7 +22,6 @@ class ClipboardReader:
         """Helper to use ObjC's speech synthesizer's didFinish-method. When reader is finished reading its status changes to 'not busy'.
         
         Why not simply use self.SYNTHESIZER.isSpeaking()?
-        
         The busy state includes preprocessing i.e. getting the dominant language and a voice.
         """
         
@@ -52,25 +51,26 @@ class ClipboardReader:
         """
         return f'{self.name} ({self.language})'
     
-    def block_has_no_letters(self, block:str):
-        return not bool(re.search(r'[a-zA-Z]', block))
+    def block_has_no_words(self, block: str):
+        """Checks if the block contains no valid words.
+        A valid word is defined as having at least two consecutive Unicode letters.
+        """
+        return not bool(re.search(r'[^\W\d_]{2,}', block))
         
     def detect_language(self, text: str) -> str:
         """Detect dominant language of a given Text.
         """
         
         # If text block includes no words objC cannot detect language. Use previously detected language or english as fallback.
-        if self.block_has_no_letters(text):
-            if self.language:
-                return self.language
-            else:
-                return 'en'
+        if self.block_has_no_words(text):
+            fallback = self.language or 'en'
+            return fallback
                 
         string = ObjCClass('NSString').stringWithString_(text)
         tagger = ObjCClass('NSLinguisticTagger').alloc().initWithTagSchemes_options_(['Language'], 0)
         tagger.setString_(string)
         detected_language = tagger.dominantLanguage()
-        lng =  str(detected_language)
+        lng = str(detected_language)
         
         return lng
         
